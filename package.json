@@ -1,0 +1,32 @@
+{
+  "name": "ahmed",
+  "version": "1.0.0",
+  "description": "fq",
+  "main": "node1.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "fq"
+  },
+  "keywords": [
+    "fq"
+  ],
+  "author": "fq",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "crypto-js": "^4.2.0",
+    "express": "^4.21.2",
+    "hbs": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.14.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.13.0",
+    "nodemailer": "^6.10.0",
+    "qrcode": "^1.5.4",
+    "yargs": "^17.7.2"
+  }
+}

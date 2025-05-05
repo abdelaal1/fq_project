@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>customer dashboard</title>
+	<style type="text/css">
+		#outer{
+			text-align: center; 
+			width: 90%; 
+			margin-left: auto;
+			margin-right: auto; 
+			max-width: 450px; 
+			background-color: #e6ffb3;
+			padding-top: 20px;
+			padding-bottom: 25px;
+			position: relative;
+		}
+
+		#last_called_customer{
+			width: 135px;
+			padding-top: 20px;
+			padding-bottom: 20px;
+			border: 1px solid black;
+			border-radius: 5px;
+			font-size: 50px;
+			margin-right: auto;
+			margin-left: auto;
+			background-color: white;
+			margin-top:0px;
+			margin-bottom: 8px;
+			color: white;
+		}
+
+		button{
+			border: none;
+			background-color: #e6ffb3;
+			padding: 0px;
+		}
+
+		#name{
+			text-align: center;
+			color: blueviolet;
+			font-size: 16px;
+			font-style: italic;
+			margin-top: 20px;
+			margin-bottom: 20px;
+			background-color: #9999ff;
+			color: white;
+			padding-top: 5px;
+			padding-bottom: 5px;
+			font-weight: bold;
+		}
+
+		#alert:hover{
+			box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+			border-radius: 50%;
+		}
+
+		#play:active{
+			opacity: 0.6;
+
+		}
+
+		#alert:active{
+			opacity: 0.6;
+
+		}
+
+		#dialog{
+			width: 270px; 
+			margin-left: auto;
+			margin-right: auto; 
+			border-radius: 10px;
+			border-color: blue;
+			box-shadow: 5px 5px 8px #b3b3ff;
+		}
+
+		#invalid, #skip{
+			width: 230px; 
+			margin-left: auto;
+			margin-right: auto; 
+			max-width: 370px;
+			border-radius: 10px;
+			border-color: blue;
+			box-shadow: 5px 5px 8px #b3b3ff;
+		}
+
+		#alert_at{
+			border: 1px solid #0544b5;
+			outline: 3px solid #66ccff;
+			border-radius: 2px;
+		}
+
+		#alert_end{
+			margin-right: 0px;
+		}
+
+		#ok, #cancel{
+			float: left;
+			padding: 6px;
+			background-color: #0544b5;
+			color:white; 
+			border-radius:5px;
+			border: 1px solid #0544b5;
+		}
+
+		#close_invalid, #close_skip, #close_hint{
+			padding: 5px 10px;
+			background-color: #0544b5;
+			color:white; 
+			border-radius:5px;
+			border: 1px solid #0544b5;
+		}
+
+		#cancel{
+			margin-left: 10px;
+		}
+
+
+	</style>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	<div id="outer">
+		<p id="name">{{service_provider}}</p>
+		<p style="margin-top: 30px; margin-bottom: 8px; color: #0544b5; font-size: 16px; text-align: center;" dir="rtl">آخر عميل تم النداء عليه </p>
+		<div id="last_called_customer">0</div>
+		<p id="service" style="text-align:center; margin-top:0px; margin-bottom:15px; color:purple; font-size:16px;" dir="rtl">لا يوجد خدمة الآن</p>
+		<button  title="alert" id="alert_button" style="margin-left: 15px; color: orangered;"><img id="alert" src="alarm_icon.png"></button>
+		<span id="alert_at_span" style="color: orangered; font-size: 16px; font-weight: bold;"></span>
+		<a href="#" onclick="window.location.href='customer-dashboard.html?id={{id}}&lang=en&get_alert_at=' + get_alert_at + '&get_alert_end=' +get_alert_end +'&first_time=' + first_time + '&greater_than=' + greater_than"  style="position: absolute; top: 10px; right: 10px; text-decoration: none;">En</a>
+	</div>
+	<audio id="audio" src="http://localhost:3000/alert.mp3"></audio>
+	<dialog id="dialog" style="text-align:right;">		
+		<input type="number" name="alert_at" id="alert_at" min="1" max="99999" step="1" style="width: 70px; margin-right: 8px;"><label for="alert_at" dir="rtl">التنبيه عند النداء على العميل رقم </label><br><br>
+		<label for="alert_end">التنبيه عند الإنتهاء من خدمة آخر عميل </label><input type="checkbox" name="alert_end" id="alert_end" style="vertical-align: middle;"><br><br>
+		<p style="color: orange; margin-top: 0px; text-align: right;" dir="rtl">لسماع صوت التنبيه اضغط  <label id="play" style="font-weight: bolder;" dir="rtl">هنا</label></p>
+		<div>
+			<button id="ok" value="yes" dir="rtl">موافق</button>
+			<button id="cancel" value="cancel" dir="rtl">إلغاء</button>
+		</div>			
+	</dialog>
+	<dialog id="invalid" style="text-align: center;">
+		<p style="width: 200px; margin-left:auto; margin-right:auto;" dir="rtl">رقم عميل غير صالح </p>
+		<button id="close_invalid" dir="rtl">إغلاق</button>
+	</dialog>
+	<dialog id="skip" style="text-align: center;">
+		<p style="width: 200px; margin-left:auto; margin-right:auto;" id="skip_msg" dir="rtl"></p>
+		<button id="close_skip" dir="rtl">إغلاق</button>
+	</dialog>
+	<dialog id="hint" style="text-align: center;">
+		<p style="width: 200px; margin-left:auto; margin-right:auto;" dir="rtl">من فضلك لا تغلق التطبيق حتى يعمل التنبيه</p>
+		<button id="close_hint">إغلاق</button>
+	</dialog>
+	<script type="text/javascript">
+		const outer = document.getElementById("outer");
+		const div = document.getElementById("last_called_customer");
+		const alert_button = document.getElementById("alert_button");
+		const alert_at_span = document.getElementById("alert_at_span");
+		const ok = document.getElementById("ok");
+		const cancel = document.getElementById("cancel");
+		const dialog = document.getElementById("dialog");
+		const hint = document.getElementById("hint");
+		const close_hint = document.getElementById("close_hint");
+		const alert_end = document.getElementById("alert_end");
+		const alert_at = document.getElementById("alert_at");
+		const close_invalid = document.getElementById("close_invalid");
+		const invalid = document.getElementById("invalid");
+		const play = document.getElementById("play");
+		const service = document.getElementById("service");
+		const skip = document.getElementById("skip");
+		const skip_msg = document.getElementById("skip_msg");
+		const close_skip = document.getElementById("close_skip");
+		const queryParams = new URLSearchParams(window.location.search);
+		const audio = document.getElementById('audio');
+		var id = queryParams.get("id");
+
+		var get_alert_at = (queryParams.get("get_alert_at") !== null)?queryParams.get("get_alert_at") : "";
+		var get_alert_end = (queryParams.get("get_alert_end") !== null)?queryParams.get("get_alert_end") : "";
+		var first_time = (queryParams.get("first_time") !== null)?queryParams.get("first_time") : "yes";
+		var greater_than = (queryParams.get("greater_than") !== null)?queryParams.get("greater_than") : "";
+
+		alert_at_span.innerText = (get_alert_end == "")? get_alert_at : get_alert_at + " " + "إنهاء";			
+
+		if(typeof(EventSource) !== "undefined") {		  
+		  const url = "http://localhost:3000/update?id=" + id;
+		  const evtsource = new EventSource(url);
+		  id = "id" + id;
+		  evtsource.addEventListener(id, (event) => {
+			  const last_called_customer = event.data;
+			  if (last_called_customer !== "0") {
+			  	  div.innerText = last_called_customer;
+				  div.style.color = "black";				  					  
+				  service.style.visibility = "hidden";
+				  if (last_called_customer == get_alert_at) {
+				  	audio.play();
+				  	get_alert_at = "";
+				  	alert_at_span.innerText = get_alert_end;
+				  	return;
+				  }
+				  if ((Number(last_called_customer) > Number(get_alert_at)) && get_alert_at != "" && first_time == "yes" && greater_than == "yes") {
+				  	first_time = "no";
+				  	audio.play();
+				  	skip_msg.innerText = "لقد تم تجاوز العميل رقم  " + get_alert_at;
+				  	skip.showModal();
+				  }
+			  }
+			  else{
+			  	  div.style.color = "white";
+			  	  div.innerText = "0";
+				  service.style.visibility = "visible";
+				  if (get_alert_end == "End") {
+				  	audio.play();
+				  	get_alert_end = "";
+				  	alert_at_span.innerText = get_alert_at;
+				  }
+			  }
+
+
+		  });
+		}
+		else{
+			outer.innerHTML = "To use the application, you need to update your browser.";
+		}
+
+		play.addEventListener("click", (event) => {
+			audio.play();
+		});
+
+		alert_button.addEventListener("click", (event) => {
+			dialog.showModal();
+		});
+
+		ok.addEventListener("click", (event) => {
+			dialog.close("ok");
+		});
+
+		cancel.addEventListener("click", (event) => {
+			dialog.close("cancel");
+		});
+
+		dialog.addEventListener("close", (event) => {
+			if (dialog.returnValue == "ok") {
+				if (alert_at.validity.valid) {
+					first_time = "yes";
+					get_alert_at = alert_at.value;
+					if (Number(get_alert_at) <= Number(div.innerText)) {
+						greater_than = "no";
+					}
+					else{
+						greater_than = "yes";
+					}
+					hint.showModal();
+					get_alert_end = (alert_end.checked === true)? "End" : "";
+					alert_at_span.innerText = (get_alert_end == "")? get_alert_at : get_alert_at + " " + "إنهاء";
+				}
+				else{
+					invalid.showModal();
+				}
+												
+			}
+		});
+
+		close_invalid.addEventListener("click", (event) => {
+			invalid.close();
+			dialog.showModal();
+		});
+
+		close_skip.addEventListener("click", (event) => {
+			skip.close();
+		});
+
+		close_hint.addEventListener("click", (event) => {
+			hint.close();
+		});
+
+	</script>
+	
+
+</body>
+</html>
