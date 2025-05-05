@@ -529,6 +529,7 @@ app.get('/download_qr_code', (req, res) => {
   		
     })	
 })
-app.listen(3000, () => {
- console.log('Server is up on port 3000.')
-}) 
+const port = process.env.PORT || 3000
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+});
