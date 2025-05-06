@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'ghoneim0061@gmail.com',
-    pass: 'kcvx mxmk xxmd elyh'
+    pass: 'ayqa txso anfl bicy'
   }
 })
 
@@ -173,7 +173,7 @@ app.get('/check_login_information', async (req, res) => {
 	  	res.send('{"res":"Error establishing a database connection. Please try again."}')
 		 	return
 		} 		  
-		var sql = "select id,password from users where email=?"
+		var sql = "select id,service_provider,password from users where email=?"
 		con.query(sql, [email], async function (err, result) {
 		  if (err) {
 			res.send('{"res":"Error validating login information. Please try again."}')
@@ -184,7 +184,8 @@ app.get('/check_login_information', async (req, res) => {
     		const isMatch = await bcrypt.compare(password, db_password)
     		if (isMatch) {
     			const id = result[0].id
-					const token = jwt.sign({ id: id }, 'Nahla_11')
+    			const service_provider = result[0].service_provider
+					const token = jwt.sign({ id: id, service_provider: service_provider }, 'Nahla_11')
 					res.cookie('auth_jwt', token, {
 	        httpOnly: true,
 	        maxAge: 60 * 60 * 1000 * 24 * 100, 
@@ -206,47 +207,28 @@ app.get('/check_login_information', async (req, res) => {
 app.get('/admin_dashboard.html', (req, res) => {
 	try {
 		const token = req.cookies.auth_jwt
-	  	const user = jwt.verify(token, 'Nahla_11')
-	  	const id = user.id
-	  	const element = db.find((element) => element[0] == ("id" + id))
+	  const user = jwt.verify(token, 'Nahla_11')
+	  const id = user.id
+	  const service_provider = user.service_provider
+	  const element = db.find((element) => element[0] == ("id" + id))
 		if(element){
 			var last_called_customer = element[1]
 		}
 		else{
 			var last_called_customer = ""
 		}	
-	  	const con = mysql.createConnection({
-			host: "localhost",
-			user: "root",
-			password: "Nahla_11",
-			database: "fq"
-		})
-		con.connect(function(err) {
-			if (err){
-			res.send('{"res":"Error establishing a database connection. Please try again."}')
-				 return
-			} 		  
-			var sql = "select service_provider from users where id=?"
-			con.query(sql, [id], function (err, result) {
-				if (err) {
-					res.send('{"res":"Error retrieving service provider name. Please try again."}')
-					return
-		    	} 
-		    	const service_provider = result[0].service_provider
-		    	if(req.query.lang == "ar"){
-			    	res.render('admin_dashboard1.hbs', {					 
-						service_provider: service_provider,
-						last_called_customer: last_called_customer
-					})
-				}
-				else{
-					res.render('admin_dashboard.hbs', {					 
-						service_provider: service_provider,
-						last_called_customer: last_called_customer
-					})
-				}	  		
+	  if(req.query.lang == "ar"){
+		 	res.render('admin_dashboard1.hbs', {					 
+			service_provider: service_provider,
+			last_called_customer: last_called_customer
 			})
-		})
+		}
+		else{
+			res.render('admin_dashboard.hbs', {					 
+			service_provider: service_provider,
+			last_called_customer: last_called_customer
+			})
+		}	  		
 	}
 	catch(err) {
 		console.log(err)
@@ -328,9 +310,10 @@ app.get('/update_password', (req, res) => {
 app.get('/link-qr.html', async (req, res) => {
 	try{
 		const token = req.cookies.auth_jwt
-  		const user = jwt.verify(token, 'Nahla_11')    
-  		const id = user.id
-		var link = "http://localhost:3000/customer-dashboard.html?id=" + id
+  	const user = jwt.verify(token, 'Nahla_11')    
+  	const id = user.id
+  	const service_provider = user.service_provider
+		var link = "http://localhost:3000/customer-dashboard.html?id=" + id + "&service_provider=" + service_provider
 		var qr_code = await QRCode.toDataURL(link)
 		if (req.query.lang == "ar") {
 			link = link + "&lang=ar"
@@ -457,38 +440,20 @@ app.all('/update', (req, res) => {
 
 app.get('/customer-dashboard.html', (req, res) => {
 	const id = req.query.id
-  	const con = mysql.createConnection({
-		host: "localhost",
-		user: "root",
-		password: "Nahla_11",
-		database: "fq"
-	})
-	con.connect(function(err) {
-		if (err){
-		  	res.send('{"res":"Error establishing a database connection. Please try again."}')
-			 	return
-		} 		  
-		var sql = "select service_provider from users where id=?"
-		con.query(sql, [id], function (err, result) {
-			if (err) {
-					res.send('{"res":"Error retrieving service provider name. Please try again."}')
-					return
-	    	} 
-		    const service_provider = result[0].service_provider
-		    if (req.query.lang == "ar") {
-			    res.render('customer-dashboard1.hbs', {					 
-					service_provider: service_provider,
-					id:id
-				})
-			}
-			else{
-				res.render('customer-dashboard.hbs', {					 
-					service_provider: service_provider,
-					id:id
-				})
-			}  		
+	const service_provider = req.query.service_provider
+  if (req.query.lang == "ar") {
+	  res.render('customer-dashboard1.hbs', {					 
+			service_provider: service_provider,
+			id:id
 		})
-	})	
+	}
+	else{
+		res.render('customer-dashboard.hbs', {					 
+			service_provider: service_provider,
+			id:id
+		})
+	}		
+	
 })
 
 app.get('/help.html',(req, res) => {
@@ -506,8 +471,8 @@ app.get('/help1.html',(req, res) => {
 app.get('/download_qr_code', (req, res) => {
 	
 	const token = req.cookies.auth_jwt
-  	const user = jwt.verify(token, 'Nahla_11')    
-  	const id = user.id
+  const user = jwt.verify(token, 'Nahla_11')    
+  const id = user.id
 	const link = req.query.link
 	const file_name = "qr_code" + id + ".png"
 	const filePath = __dirname + "/" + file_name
@@ -529,7 +494,7 @@ app.get('/download_qr_code', (req, res) => {
   		
     })	
 })
-const port = process.env.PORT || 3000
-app.listen(port, () => {
+const port = process.env.port || 3000
+app.listen(port,() => {
     console.log(`Server running on port ${port}`);
 });
