@@ -72,12 +72,7 @@ app.get('/register.html', (req, res) => {
 
 app.get('/check_email_existence', (req, res) => {
 	const email = req.query.email
-	const con = mysql.createConnection({
-			host: "localhost",
-			user: "root",
-			password: "Nahla_11",
-			database: "fq"
-	})
+	var con = mysql.createConnection(process.env.JAWSDB_URL);
 	con.connect(function(err) {
 		if (err){
 	  	res.send('{"res":"Error establishing a database connection. Please <a href=\'register.html\'>try again.</a>"}')
@@ -87,6 +82,7 @@ app.get('/check_email_existence', (req, res) => {
 		  con.query(sql, [email], function (err, result) {
 		    	if (err) {
 				 		res.send('{"res":"Error validating email. Please <a href=\'register.html\'>try again.</a>"}')
+				 		con.end()
 				 		return
     			} 
     			if(result.length >= 1) {
@@ -96,6 +92,7 @@ app.get('/check_email_existence', (req, res) => {
   				if(result.length == 0) {
   					res.send('{"res":"Email does not exist"}')
   				}
+  				con.end()
 		  })
 	})
 })
@@ -133,12 +130,7 @@ app.get('/add_user', (req, res) => {
 	var key = 'Nahla_11'
 	var decrypted = crypto.AES.decrypt(code, key).toString(crypto.enc.Utf8)
 	if (decrypted == email) {
-		var con = mysql.createConnection({
-			host: "localhost",
-			user: "root",
-			password: "Nahla_11",
-			database: "fq"
-		})
+		var con = mysql.createConnection(process.env.JAWSDB_URL);
 		con.connect(function(err) {
 			if (err){
 			  	res.send("Error establishing a database connection. Please click the verification link again.")
@@ -149,11 +141,13 @@ app.get('/add_user', (req, res) => {
 		  con.query(sql, [service_provider, email, hashedpassword], function (err, result) {
 			  if (err) {
 				 	res.send("Error adding user. Please click the verification link again.")
+				 	con.end()
 				 	return
 	    	} 
 	    	else {
 				 	res.send("<h4><span style='color: green; font-size: 85%'>&#10004; </span>Registration completed successfully.</h4>Click <a href = 'index.html'>here</a> to login.")
 	  		}
+	  		con.end()
 		  })
 		})
 	}
@@ -162,12 +156,7 @@ app.get('/add_user', (req, res) => {
 app.get('/check_login_information', async (req, res) => {
 	const email = req.query.email
 	const password = req.query.password
-	const con = mysql.createConnection({
-			host: "localhost",
-			user: "root",
-			password: "Nahla_11",
-			database: "fq"
-	})
+	var con = mysql.createConnection(process.env.JAWSDB_URL);
 	con.connect(async function(err) {
 		if (err){
 	  	res.send('{"res":"Error establishing a database connection. Please try again."}')
@@ -177,6 +166,7 @@ app.get('/check_login_information', async (req, res) => {
 		con.query(sql, [email], async function (err, result) {
 		  if (err) {
 			res.send('{"res":"Error validating login information. Please try again."}')
+			con.end()
 			return
     	} 
     	if(result.length >= 1) {
@@ -200,6 +190,7 @@ app.get('/check_login_information', async (req, res) => {
   		else {
   			res.send('{"res":"Incorrect login information. Please try again."}')
   		}
+  		con.end()
 		})
 	})
 })
@@ -281,12 +272,7 @@ app.get('/update_password', (req, res) => {
 	var key = '11_alhaN'
 	var decrypted = crypto.AES.decrypt(code, key).toString(crypto.enc.Utf8)
 	if (decrypted == email) {
-		const con = mysql.createConnection({
-			host: "localhost",
-			user: "root",
-			password: "Nahla_11",
-			database: "fq"
-		})
+		var con = mysql.createConnection(process.env.JAWSDB_URL);
 		con.connect(function(err) {
 			if (err){
 			  res.send("Error establishing a database connection. Please click the verification link again.")
@@ -297,11 +283,13 @@ app.get('/update_password', (req, res) => {
 		  con.query(sql, [hashedpassword, email], function (err, result) {
 			  if (err) {
 				 	res.send("Error updating password. Please click the verification link again.")
+				 	con.end()
 				 	return
 	    	} 
 	    	else {
 				 	res.send("<h4><span style='color: green; font-size: 85%'>&#10004; </span>Your password has successfully been reset</h4>Click <a href = 'index.html'>here</a> to login.")
 	  		}
+	  		con.end()
 		  })
 		})
 	}
@@ -346,12 +334,7 @@ app.get('/update_name', (req, res) => {
   	const user = jwt.verify(token, 'Nahla_11')    
   	const id = user.id
 		const new_name = req.query.new_name
-		const con = mysql.createConnection({
-				host: "localhost",
-				user: "root",
-				password: "Nahla_11",
-				database: "fq"
-				})
+		var con = mysql.createConnection(process.env.JAWSDB_URL);
 			con.connect(function(err) {
 				if (err) {
 					 	res.send("error updating name.")
@@ -361,9 +344,11 @@ app.get('/update_name', (req, res) => {
 			  con.query(sql, [new_name, id], function (err, result) {
 				  if (err) {
 					 	res.send("error updating name.")
+					 	con.end()
 					 	return
 					}
 					res.send("done")
+					con.end()
 	    	})
 			})
 		}
