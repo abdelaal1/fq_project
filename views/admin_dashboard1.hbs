@@ -314,7 +314,7 @@
 		}
 
 		#yes, #cancel, #ok_edit, #cancel_edit{
-			float: right;
+			float: left;
 			padding: 6px;
 			background-color: #0544b5;
 			color:white; 
@@ -411,21 +411,21 @@
 	<dialog id="dialog">
 		<p style="text-align: right;" dir="rtl">هل تريد إخبار عملائك أنك ستتوقف عن تقديم الخدمة؟</p>
 		<div>
-			<button id="yes" value="yes">Yes</button>
-			<button id="cancel" value="cancel">Cancel</button>
+			<button id="yes" value="yes" dir="rtl">نعم</button>
+			<button id="cancel" value="cancel" dir="rtl">إلغاء</button>
 		</div>			
 	</dialog>
 	<dialog id="dialog_edit">
-		<label for="new_name">New name</label>
+		<label for="new_name">اﻹسم الجديد</label>
 		<div style="margin-bottom: 14px; margin-top: 2px;"><input type="text" name="new_name" id="new_name" maxlength="40" required style="width: 97%; height:25px; font-size: 14px; text-align: left; padding-left: 5px; border-radius: 2px;"></div>
 		<div>
-			<button id="ok_edit" value="yes">Ok</button>
-			<button id="cancel_edit" value="cancel">Cancel</button>
+			<button id="ok_edit" value="yes" dir="rtl">نعم </button>
+			<button id="cancel_edit" value="cancel" dir="rtl">إلغاء</button>
 		</div>			
 	</dialog>
 	<dialog id="invalid" style="text-align: center;">
 		<p id="error_new_name" style="width: 98%; margin-left:auto; margin-right:auto;"></p>
-		<button id="close_invalid">Ok</button>
+		<button id="close_invalid" dir="rtl">إغلاق </button>
 	</dialog>
 
 	<script type="text/javascript">
