@@ -49,7 +49,7 @@ app.get('', (req, res) => {
 		res.end()
 	}
 	else{
-		res.redirect('http://localhost:3000/admin_dashboard.html?lang=ar')
+		res.redirect('https://lit-lowlands-82854-b48a400450f7.herokuapp.com/admin_dashboard.html?lang=ar')
 	}	
 })
 
@@ -60,7 +60,7 @@ app.get('/index.html', (req, res) => {
 		res.end()
 	}
 	else{
-		res.redirect('http://localhost:3000/admin_dashboard.html?lang=ar')
+		res.redirect('https://lit-lowlands-82854-b48a400450f7.herokuapp.com/admin_dashboard.html?lang=ar')
 	}	
 })
 
@@ -104,7 +104,7 @@ app.post('/email1', async (req, res) => {
 	const hashedpassword = await bcrypt.hash(password, 8)
 	const key = 'Nahla_11'
 	const code = crypto.AES.encrypt(email, key).toString()
-	const urlencoded = 'http://localhost:3000/add_user?service_provider='+querystring.escape(service_provider)+'&amp;email='+querystring.escape(email)+'&amp;hashedpassword='+querystring.escape(hashedpassword)+'&amp;code='+querystring.escape(code)	
+	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/add_user?service_provider='+querystring.escape(service_provider)+'&amp;email='+querystring.escape(email)+'&amp;hashedpassword='+querystring.escape(hashedpassword)+'&amp;code='+querystring.escape(code)	
 	const mailOptions = {
 		from: 'ghoneim0061@gmail.com',
 		to: email,
@@ -223,7 +223,7 @@ app.get('/admin_dashboard.html', (req, res) => {
 	}
 	catch(err) {
 		console.log(err)
-	  	res.redirect('http://localhost:3000/index.html')
+	  	res.redirect('https://lit-lowlands-82854-b48a400450f7.herokuapp.com/index.html')
 	  	return
 	}	 	
 })
@@ -247,7 +247,7 @@ app.post('/email2', async (req, res) => {
 	const hashedpassword = await bcrypt.hash(password, 8)
 	const key = '11_alhaN'
 	const code = crypto.AES.encrypt(email, key).toString()
-	const urlencoded = 'http://localhost:3000/update_password?email='+querystring.escape(email)+'&amp;hashedpassword='+querystring.escape(hashedpassword)+'&amp;code='+querystring.escape(code)	
+	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/update_password?email='+querystring.escape(email)+'&amp;hashedpassword='+querystring.escape(hashedpassword)+'&amp;code='+querystring.escape(code)	
 	const mailOptions = {
 		from: 'ghoneim0061@gmail.com',
 		to: email,
@@ -301,7 +301,7 @@ app.get('/link-qr.html', async (req, res) => {
   	const user = jwt.verify(token, 'Nahla_11')    
   	const id = user.id
   	const service_provider = user.service_provider
-		var link = "http://localhost:3000/customer-dashboard.html?id=" + id + "&service_provider=" + service_provider
+		var link = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/customer-dashboard.html?id=" + id + "&service_provider=" + service_provider
 		var qr_code = await QRCode.toDataURL(link)
 		if (req.query.lang == "ar") {
 			link = link + "&lang=ar"
@@ -319,7 +319,7 @@ app.get('/link-qr.html', async (req, res) => {
 		}
 	}
 	catch(err){
-		res.redirect('http://localhost:3000/index.html')
+		res.redirect('https://lit-lowlands-82854-b48a400450f7.herokuapp.com/index.html')
 	}	 	
 })
 
