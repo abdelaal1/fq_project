@@ -7,7 +7,8 @@ con.connect(function(err) {
     throw err;
   console.log("Connected!");
   con.query("CREATE DATABASE database", function (err, result) {
-    if (err) throw err;
+    if (err) 
+      throw err;
     console.log("Database created");
   });
 });
