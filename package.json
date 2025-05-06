@@ -4,7 +4,7 @@
   "description": "fq",
   "main": "node1.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
