@@ -602,12 +602,12 @@
 				}
 			
 				else if(new_name.validity.valueMissing){
-					error_new_name.innerText = "من فضلك أدخل رقم صالح ";
+					error_new_name.innerText = "من فضلك أدخل اﻹسم الجديد";
 					invalid.showModal();
 				}
 
 				else if(new_name.validity.tooLong){
-					error_new_name.innerText = `Max. allowed character is ${new_name.maxLength}. You entered ${new_name.value.length} characters`;
+					error_new_name.innerText = "لقد تجاوزت أقصى عدد مسموح به من اﻷحرف وهو 40 حرف";
 					invalid.showModal();
 				}
 			}
