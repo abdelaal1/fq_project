@@ -140,19 +140,6 @@
 
 		}
 
-		@supports not (position-anchor: --anchor;) {
-			#update{
-				width: 70px;
-				height: 40px;			
-				background-color: #b3d9ff;
-				border-radius: 8px;
-				font-size: 18px;
-				border: 2px solid #9999ff;
-				display: block;
-				margin-top: 12px;
-			}
-		}
-
 		.disable{
 			opacity: 0.5;
 			width: 70px;
@@ -347,6 +334,33 @@
 		.updating span:nth-child(3) {
 		    
 		    animation-delay: .4s;
+		}
+
+		@supports not (position-anchor: --anchor;) {
+			#update{
+				width: 70px;
+				height: 40px;			
+				background-color: #b3d9ff;
+				border-radius: 8px;
+				font-size: 18px;
+				border: 2px solid #9999ff;
+				display: block;
+				margin-top: 10px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			#logout{
+				margin-right: 0px;
+				float: none;
+				position: absolute;
+				right: 10px;
+			}
+			#end{
+				margin-left: 0px;
+				float: none;
+				position: absolute;
+				left: 10px;
+			}
 		}		
 
 	</style>
@@ -371,7 +385,7 @@
 		<button id="down"></button>
 		<button id="update" class="update">إرسال</button>
 		<p id="message" dir="rtl"></p>
-		<div style="overflow: auto;">
+		<div style="overflow: auto; position: relative;">
 			<button id="end" class="end">إنهاء</button>  
 			<button id="logout" title="Logout" onclick="document.cookie = 'auth_jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly=true;'; location.href = 'index.html'"><img id="logout_img" src="/logout.png"></button>
 		</div>
