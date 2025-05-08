@@ -336,6 +336,13 @@
 		    animation-delay: .4s;
 		}
 
+		#help{
+		position: fixed;
+		position-anchor: --for_help;
+		top: anchor(top);
+		left: calc(anchor(left) + 75px);
+		}
+
 		@supports not (position-anchor: --anchor) {
 			#update{
 				transform: translate(50px,-45px);
@@ -343,7 +350,7 @@
 			#help{
 				position: absolute;
 				top: 50%;
-				right: 20%;
+				left: 20%;
 			}
 
 
@@ -376,7 +383,7 @@
 			<button id="logout" title="Logout" onclick="document.cookie = 'auth_jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly=true;'; location.href = 'index.html'"><img id="logout_img" src="/logout.png"></button>
 		</div>
 		<a href="admin_dashboard.html?lang=en" style="position: absolute; top: 10px; right: 10px; text-decoration: none;">En</a>
-		<a href="help1.html" target="_blank"><img id="help" src="help1.png" style="position: fixed; position-anchor: --for_help; top: anchor(top); left: calc(anchor(left) + 75px);"/></a>
+		<a href="help1.html" target="_blank"><img id="help" src="help1.png"/></a>
 	</div>
 	<span id="last_update"></span>
 
