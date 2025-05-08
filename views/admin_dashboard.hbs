@@ -337,7 +337,20 @@
 		.updating span:nth-child(3) {
 		    
 		    animation-delay: .4s;
-		}		
+		}
+
+		@supports not (position-anchor: --anchor) {
+			#update{
+				transform: translate(50px,-45px);
+			}
+			#help{
+				position: absolute;
+				top: 50%;
+				right: 20%;
+			}
+
+
+		}				
 
 	</style>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
