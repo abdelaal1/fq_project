@@ -106,7 +106,7 @@ app.post('/email1', async (req, res) => {
 	const code = crypto.AES.encrypt(email, key).toString()
 	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/add_user?service_provider='+querystring.escape(service_provider)+'&amp;email='+querystring.escape(email)+'&amp;hashedpassword='+querystring.escape(hashedpassword)+'&amp;code='+querystring.escape(code)	
 	const mailOptions = {
-		from: 'ghoneim0061@gmail.com',
+		from: '"Follow Queue"ghoneim0061@gmail.com',
 		to: email,
 		subject: 'Complete registeration',
 		html: "Please click<a href="+urlencoded+"> here</a> to complete registeration"
