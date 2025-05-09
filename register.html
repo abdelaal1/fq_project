@@ -203,7 +203,7 @@
 				xhttp.open("get", url, false);
 				xhttp.send();
 			}
-			if (!(password.validity.valid)) {
+			if ((!(password.validity.valid)) || (!(/[0-9]/.test(password.value))) || (!(/[a-z]/.test(password.value))) || (!(/[A-Z]/.test(password.value)))) {
     			showError(password);
     			event.preventDefault();
 			}			
