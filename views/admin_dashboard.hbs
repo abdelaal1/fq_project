@@ -258,7 +258,7 @@
 		    }
 		}
 
-		#dialog, #dialog_edit, #invalid {
+		#dialog, #dialog_edit, #invalid, #connection {
 			width: 75%; 
 			margin-left: auto;
 			margin-right: auto; 
@@ -284,6 +284,14 @@
 
 		#cancel, #cancel_edit{
 			margin-right: 10px;
+		}
+
+		#close_invalid, #close_connection{
+			padding: 6px;
+			background-color: #0544b5;
+			color:white; 
+			border-radius:5px;
+			border: 1px solid #0544b5;
 		}
 
 		#last_update{
@@ -412,12 +420,12 @@
 		</div>			
 	</dialog>
 	<dialog id="invalid" style="text-align: center;">
-		<p id="error_new_name" style="width: 98%; margin-left:auto; margin-right:auto;"></p>
+		<p id="error_new_name" style="width: 98%; margin-left:auto; margin-right:auto; text-align: center;"></p>
 		<button id="close_invalid">Ok</button>
 	</dialog>
 
 	<dialog id="connection" style="text-align: center;">
-		<p id="connection_message" style="width: 98%; margin-left:auto; margin-right:auto;"></p>
+		<p id="connection_message" style="width: 98%; margin-left:auto; margin-right:auto; text-align: center;"></p>
 		<button id="close_connection">Ok</button>
 	</dialog>
 
