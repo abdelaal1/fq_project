@@ -255,7 +255,7 @@
 		    }
 		}
 
-		#dialog, #dialog_edit, #invalid {
+		#dialog, #dialog_edit, #invalid, #connection {
 			width: 75%; 
 			margin-left: auto;
 			margin-right: auto; 
@@ -282,6 +282,15 @@
 		#cancel, #cancel_edit{
 			margin-left: 10px;
 		}
+
+		#close_invalid, #close_connection{
+			padding: 6px;
+			background-color: #0544b5;
+			color:white; 
+			border-radius:5px;
+			border: 1px solid #0544b5;
+		}
+
 
 		#last_update{
 			position: absolute;
@@ -401,6 +410,7 @@
 			<button id="cancel" value="cancel" dir="rtl">إلغاء</button>
 		</div>			
 	</dialog>
+
 	<dialog id="dialog_edit">
 		<div style="text-align:right; width: 97%; margin-left: auto; margin-right: auto;"><label for="new_name" style="text-align: right;" dir="rtl">اﻹسم الجديد</label></div>
 		<div style="margin-bottom: 14px; margin-top: 4px;"><input type="text" name="new_name" id="new_name" maxlength="40" required style="width: 97%; height:25px; font-size: 14px; text-align: left; padding-left: 5px; border-radius: 2px;"></div>
@@ -409,9 +419,15 @@
 			<button id="cancel_edit" value="cancel" dir="rtl">إلغاء</button>
 		</div>			
 	</dialog>
+
 	<dialog id="invalid" style="text-align: center;">
 		<p id="error_new_name" style="width: 98%; margin-left:auto; margin-right:auto; text-align: right;" dir="rtl"></p>
 		<button id="close_invalid" dir="rtl">إغلاق </button>
+	</dialog>
+
+	<dialog id="connection" style="text-align: center;">
+		<p id="connection_message" style="width: 98%; margin-left:auto; margin-right:auto; text-align: center;" dir="rtl"></p>
+		<button id="close_connection">Ok</button>
 	</dialog>
 
 	<script type="text/javascript">
@@ -617,15 +633,19 @@
 		});
 
 		window.addEventListener('offline', function() {
-    		message.innerHTML = "انقطع اﻹتصال باﻹنترنت.";
+			connection.close();
+			connection_message.innerHTML = "انقطع اﻹتصال باﻹنترنت";
+			connection.showModal();    		
 		});
 
 		window.addEventListener('online', function() {
-    		message.innerHTML = "اعادة اﻹتصال.";
-    		setTimeout(reconnected, 1000);
-    		function reconnected() {
-  				message.innerHTML = "";
-			}
+			connection.close();
+			connection_message.innerHTML = "إعادة اﻹتصال باﻹنترنت";
+			connection.showModal();    		
+		});
+
+		close_connection.addEventListener("click", (event) => {
+			connection.close();
 		});
 
 
