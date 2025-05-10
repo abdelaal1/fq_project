@@ -371,7 +371,16 @@
 				bottom: 40px;
 				left: 45%;
 			}
-		}				
+		}
+
+		@supports not (stroke-dashoffset: 30) {
+			.cls-2{
+				transform: scale(0.6,0.6);
+			}
+			#Layer_1{
+				transform: translate(14px,0px);
+			}
+		}					
 
 	</style>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
