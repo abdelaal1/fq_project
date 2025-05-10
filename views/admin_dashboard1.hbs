@@ -459,30 +459,32 @@
   				last_called_customer.className = "invalid";
   				return;
   			}
-  			updating.style.display = "inline-block";
-  			update.className = "disable";
-  			update.disabled =  true;
-  			const xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					const res_text=  xhttp.responseText;
-					if (res_text == "done") {
-						updating.style.display = "none";
-						check_mark.style.display = "inline-block";
-						setTimeout(hide_check_mark, 1000);
-						function hide_check_mark(){
-							check_mark.style.display = "none";
-							last_update.innerText = last_called_customer.value;
+  			if (navigator.onLine == true) {
+	  			updating.style.display = "inline-block";
+	  			update.className = "disable";
+	  			update.disabled =  true;
+	  			const xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						const res_text=  xhttp.responseText;
+						if (res_text == "done") {
+							updating.style.display = "none";
+							check_mark.style.display = "inline-block";
+							setTimeout(hide_check_mark, 1000);
+							function hide_check_mark(){
+								check_mark.style.display = "none";
+								last_update.innerText = last_called_customer.value;
+							}
+							update.className = "update";
+	  						update.disabled =  false;	
 						}
-						update.className = "update";
-  						update.disabled =  false;	
 					}
-				}
-			};
-				const url = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/update";
-				xhttp.open("post", url, true);
-				xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-				xhttp.send("last_called_customer="+ last_called_customer.value);
+				};
+					const url = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/update";
+					xhttp.open("post", url, true);
+					xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+					xhttp.send("last_called_customer="+ last_called_customer.value);
+			}		
 
 		});
 
@@ -613,6 +615,19 @@
 			invalid.close();
 			dialog_edit.showModal();
 		});
+
+		window.addEventListener('offline', function() {
+    		message.innerHTML = "انقطع اﻹتصال باﻹنترنت.";
+		});
+
+		window.addEventListener('online', function() {
+    		message.innerHTML = "اعادة اﻹتصال.";
+    		setTimeout(reconnected, 1000);
+    		function reconnected() {
+  				message.innerHTML = "";
+			}
+		});
+
 
 
 	</script>
