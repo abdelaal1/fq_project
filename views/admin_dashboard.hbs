@@ -416,6 +416,11 @@
 		<button id="close_invalid">Ok</button>
 	</dialog>
 
+	<dialog id="connection" style="text-align: center;">
+		<p id="connection_message" style="width: 98%; margin-left:auto; margin-right:auto;"></p>
+		<button id="close_connection">Ok</button>
+	</dialog>
+
 	<script type="text/javascript">
 		const last_called_customer = document.getElementById("last_called_customer");
 		const edit = document.getElementById("edit");
@@ -441,6 +446,9 @@
 		const logout = document.getElementById("logout");
 		const check_mark = document.getElementById("check_mark");
 		const last_update = document.getElementById("last_update");
+		const connection = document.getElementById("connection");
+		const connection_message = document.getElementById("connection_message");
+		const close_connection = document.getElementById("close_connection");
 
 		update.addEventListener("click", (event) => {
   			if (last_called_customer.validity.valueMissing) {
@@ -486,6 +494,10 @@
 					xhttp.open("post", url, true);
 					xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 					xhttp.send("last_called_customer="+ last_called_customer.value);
+			}
+			else{
+				connection_message.innerHTML = "You are currently offline";
+				connection.showModal();  
 			}		
 
 		});
@@ -619,15 +631,19 @@
 		});
 
 		window.addEventListener('offline', function() {
-    		message.innerHTML = "You are currently offline. Please check your internet connection.";
+			connection.close();
+			connection_message.innerHTML = "You are currently offline";
+			connection.showModal();    		
 		});
 
 		window.addEventListener('online', function() {
-    		message.innerHTML = "reconnected.";
-    		setTimeout(reconnected, 1000);
-    		function reconnected() {
-  				message.innerHTML = "";
-			}
+			connection.close();
+			connection_message.innerHTML = "You are currently online";
+			connection.showModal();    		
+		});
+
+		close_connection.addEventListener("click", (event) => {
+			connection.close();
 		});
 
 
