@@ -67,7 +67,7 @@
 
 		}
 
-		#dialog{
+		#dialog, #hint{
 			width: 270px; 
 			margin-left: auto;
 			margin-right: auto; 
@@ -80,7 +80,6 @@
 			width: 230px; 
 			margin-left: auto;
 			margin-right: auto; 
-			max-width: 370px;
 			border-radius: 10px;
 			border-color: blue;
 			box-shadow: 5px 5px 8px #b3b3ff;
@@ -133,7 +132,7 @@
 	</div>
 	<audio id="audio" src="https://lit-lowlands-82854-b48a400450f7.herokuapp.com/alert.mp3"></audio>
 	<dialog id="dialog" style="text-align:right;">		
-		<input type="number" name="alert_at" id="alert_at" min="1" max="99999" step="1" style="width: 70px; margin-right: 8px;"><label for="alert_at" dir="rtl">التنبيه عند النداء على العميل رقم </label><br><br>
+		<input type="number" name="alert_at" id="alert_at" min="1" max="99999" step="1" style="width: 50px; margin-right: 8px;"><label for="alert_at" dir="rtl">التنبيه عند النداء على العميل رقم </label><br><br>
 		<label for="alert_end">التنبيه عند الإنتهاء من خدمة آخر عميل </label><input type="checkbox" name="alert_end" id="alert_end" style="vertical-align: middle;"><br><br>
 		<p style="color: orange; margin-top: 0px; text-align: right;" dir="rtl">لسماع صوت التنبيه اضغط  <label id="play" style="font-weight: bolder;" dir="rtl">هنا</label></p>
 		<div>
