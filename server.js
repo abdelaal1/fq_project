@@ -377,6 +377,9 @@ app.all('/update', (req, res) => {
 		 	})
 		}	
 		else{
+			const event = "event: " + id
+			const data = "data: " + "0"
+			res.write(event + "\n" + data + "\n\n")
 			clients.push(res)
 			req.connection.on("end", function() {
 				clients.splice(clients.indexOf(res), 1)
