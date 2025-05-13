@@ -76,7 +76,7 @@
 			box-shadow: 5px 5px 8px #b3b3ff;
 		}
 
-		#invalid, #skip{
+		#invalid, #skip, #connection{
 			width: 230px; 
 			margin-left: auto;
 			margin-right: auto; 
@@ -104,7 +104,7 @@
 			border: 1px solid #0544b5;
 		}
 
-		#close_invalid, #close_skip, #close_hint{
+		#close_invalid, #close_skip, #close_hint, #close_connection{
 			padding: 5px 10px;
 			background-color: #0544b5;
 			color:white; 
@@ -152,6 +152,10 @@
 		<p style="width: 200px; margin-left:auto; margin-right:auto;" dir="rtl">من فضلك لا تغلق التطبيق حتى يعمل التنبيه</p>
 		<button id="close_hint">إغلاق</button>
 	</dialog>
+	<dialog id="connection" style="text-align: center;">
+		<p id="connection_message" style="width: 98%; margin-left:auto; margin-right:auto; text-align: center;"></p>
+		<button id="close_connection">Ok</button>
+	</dialog>
 	<script type="text/javascript">
 		const outer = document.getElementById("outer");
 		const div = document.getElementById("last_called_customer");
@@ -174,6 +178,9 @@
 		const queryParams = new URLSearchParams(window.location.search);
 		const audio = document.getElementById('audio');
 		var id = queryParams.get("id");
+		const connection = document.getElementById("connection");
+		const connection_message = document.getElementById("connection_message");
+		const close_connection = document.getElementById("close_connection");
 
 		var get_alert_at = (queryParams.get("get_alert_at") !== null)?queryParams.get("get_alert_at") : "";
 		var get_alert_end = (queryParams.get("get_alert_end") !== null)?queryParams.get("get_alert_end") : "";
@@ -272,6 +279,22 @@
 
 		close_hint.addEventListener("click", (event) => {
 			hint.close();
+		});
+
+		window.addEventListener('offline', function() {
+			connection.close();
+			connection_message.innerHTML = "انقطع اﻹتصال باﻹنترنت";
+			connection.showModal();    		
+		});
+
+		window.addEventListener('online', function() {
+			connection.close();
+			connection_message.innerHTML = "إعادة اﻹتصال باﻹنترنت";
+			connection.showModal();    		
+		});
+
+		close_connection.addEventListener("click", (event) => {
+			connection.close();
 		});
 
 	</script>
