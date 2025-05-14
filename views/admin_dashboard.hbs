@@ -480,9 +480,6 @@
 		const connection_message = document.getElementById("connection_message");
 		const close_connection = document.getElementById("close_connection");
 
-		const pixelDensity = window.devicePixelRatio;
-		document.write(pixelDensity);
-
 		update.addEventListener("click", (event) => {
   			if (last_called_customer.validity.valueMissing) {
   				message.innerHTML = "&#9888; Please enter a number.";
