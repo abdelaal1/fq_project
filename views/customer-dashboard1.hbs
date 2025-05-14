@@ -182,11 +182,28 @@
 		const connection_message = document.getElementById("connection_message");
 		const close_connection = document.getElementById("close_connection");
 
-		var get_alert_at = (queryParams.get("get_alert_at") !== null)?queryParams.get("get_alert_at") : "";
-		var get_alert_end = (queryParams.get("get_alert_end") !== null)?queryParams.get("get_alert_end") : "";
-		var first_time = (queryParams.get("first_time") !== null)?queryParams.get("first_time") : "yes";
-		var greater_than = (queryParams.get("greater_than") !== null)?queryParams.get("greater_than") : "";
-
+		if (typeof(Storage) !== "undefined") {
+    		var prev = sessionStorage.myAdress;
+    		sessionStorage.myAdress = window.location.href;
+    		if (prev == window.location.href) {
+    			var get_alert_at = "";
+				var get_alert_end = "";
+				var first_time = "yes";
+				var greater_than = "";
+    		}
+    		else{
+    			var get_alert_at = (queryParams.get("get_alert_at") !== null)?queryParams.get("get_alert_at") : "";
+				var get_alert_end = (queryParams.get("get_alert_end") !== null)?queryParams.get("get_alert_end") : "";
+				var first_time = (queryParams.get("first_time") !== null)?queryParams.get("first_time") : "yes";
+				var greater_than = (queryParams.get("greater_than") !== null)?queryParams.get("greater_than") : "";
+    		}
+    	}
+    	else{
+    		var get_alert_at = (queryParams.get("get_alert_at") !== null)?queryParams.get("get_alert_at") : "";
+			var get_alert_end = (queryParams.get("get_alert_end") !== null)?queryParams.get("get_alert_end") : "";
+			var first_time = (queryParams.get("first_time") !== null)?queryParams.get("first_time") : "yes";
+			var greater_than = (queryParams.get("greater_than") !== null)?queryParams.get("greater_than") : "";
+    	}
 		alert_at_span.innerText = (get_alert_end == "")? get_alert_at : get_alert_at + " " + "إنهاء";			
 
 		if(typeof(EventSource) !== "undefined") {		  
