@@ -374,9 +374,12 @@
 			}
 		}
 
-		@supports (stroke-dashoffset: 30) {
-			#outer{
-				background-color: orange;
+		@supports not (stroke-dashoffset: 30) or not (stroke-dasharray: 30) {
+			.cls-2{
+				transform: scale(0.6,0.6);
+			}
+			#Layer_1{
+				transform: translate(14px,0px);
 			}
 		}					
 
