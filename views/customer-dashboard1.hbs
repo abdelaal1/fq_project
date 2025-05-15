@@ -228,6 +228,9 @@
 				  	skip_msg.innerText = "لقد تم تجاوز العميل رقم  " + get_alert_at;
 				  	skip.showModal();
 				  }
+				  if (Number(last_called_customer) < Number(get_alert_at)){
+				  	greater_than = "yes";
+				  }
 			  }
 			  else{
 			  	  div.style.color = "white";

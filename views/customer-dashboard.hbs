@@ -237,6 +237,9 @@
 				  	skip_msg.innerText = "Customer number " + get_alert_at + " was skipped";
 				  	skip.showModal();
 				  }
+				  if (Number(last_called_customer) < Number(get_alert_at)){
+				  	greater_than = "yes";
+				  }
 			  }
 			  else{
 			  	  div.style.color = "white";
