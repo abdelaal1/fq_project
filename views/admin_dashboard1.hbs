@@ -465,6 +465,11 @@
 		const logout = document.getElementById("logout");
 		const check_mark = document.getElementById("check_mark");
 		const last_update = document.getElementById("last_update");
+		
+		var testElement = document.createElement("SVG");
+		if (viewBox in testElement) {
+			document.write("support")
+		}
 
 		update.addEventListener("click", (event) => {
   			if (last_called_customer.validity.valueMissing) {
