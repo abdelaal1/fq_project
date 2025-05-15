@@ -466,8 +466,8 @@
 		const check_mark = document.getElementById("check_mark");
 		const last_update = document.getElementById("last_update");
 		
-		var testElement = document.createElement("SVG");
-		if (viewBox in testElement) {
+		var testElement = document.createElement("svg");
+		if ("viewBox" in testElement) {
 			document.write("support")
 		}
 
