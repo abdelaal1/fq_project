@@ -117,7 +117,7 @@ app.post('/email1', async (req, res) => {
 		 	return
     } 
     else {
-		 	res.send("Please click the verification link we have sent to your email to complete your registeration.")
+		 	res.send("Please click the verification link we have sent to your email to complete your registeration. If it does not show up in a few minutes, check your spam folder.")
   	}
 	})
 })
