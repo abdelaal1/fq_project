@@ -113,7 +113,7 @@ app.post('/email1', async (req, res) => {
 	}
 	transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.")
+		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.</a>")
 		 	return
     } 
     else {
@@ -256,7 +256,7 @@ app.post('/email2', async (req, res) => {
 	}
 	transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.")
+		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.</a>")
 		 	return
     } 
     else {
