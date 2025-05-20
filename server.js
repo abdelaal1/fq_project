@@ -90,7 +90,7 @@ app.get('/check_email_existence', (req, res) => {
 				 		return				 	
   				}
   				if(result.length == 0) {
-  					res.send('{"res":"Email does not exist"}')
+  					res.send('{"res":"email does not exist"}')
   				}
   				con.end()
 		  })
