@@ -153,9 +153,9 @@
 	<div>
 		<a href="index.html" style="display: inline-block; font-size: 18px; font-weight: bold;">Login</a>
 		<form id="form" method="post" action="email1" enctype="application/x-www-form-urlencoded" novalidate>
-			<input type="text" name="service_provider" id="name" class="user" placeholder="Name (max: 40 characters)" required maxlength="40">			
+			<input type="text" name="name" id="name" class="user" placeholder="Name (max: 40 characters)" required maxlength="40">			
 			<p id="error_name" class="error"></p>
-			<p id="hint_name" class="hint" dir="rtl" style="text-align: right;">مثال: دكتور على عمر إستشارى الباطنة / مطعم جاد فرع ميامى </p>
+			<p id="hint_name" class="hint" dir="rtl" style="text-align: right;">hint</p>
 			<input type="email" name="email" id="email" class="user" placeholder="Email" required maxlength="40">
 			<p id="error_email" class="error"></p>
 			<input type="password" name="password" id="password" class="user" placeholder="Password" required maxlength="20" minlength="8"><p id="error_password" class="error"></p>
@@ -201,7 +201,7 @@
 						var res_text=  xhttp.responseText;
 						var res_obj = JSON.parse(res_text);
 						var res = res_obj.res;
-						if (res != "Email does not exist") {
+						if (res != "email does not exist") {
 							event.preventDefault();
 							document.write(res);
 							return;
@@ -232,6 +232,10 @@
 
 		name.addEventListener("focusout", (event) => {
 			hint_name.style.display = "none";
+			if (event.relatedTarget !== null && (event.relatedTarget.id == "show_hide" || event.relatedTarget.id == "show_hide1")) {
+		  		name.focus();
+		  		return;
+		  	}
   			if (name.validity.tooLong) {
   				error_name.innerHTML = `&#9888; Max. allowed character is ${name.maxLength}. You entered ${name.value.length} characters`;
   				name.style.backgroundImage= "url('error.png')";	
@@ -261,17 +265,8 @@
 
 		password.addEventListener("focusout", (event) => {
 				hint_password.style.display = "none";
-				if (event.relatedTarget !== null && event.relatedTarget.id == "show_hide") {
+				if (event.relatedTarget !== null && (event.relatedTarget.id == "show_hide" || event.relatedTarget.id == "show_hide1")) {
 		  			password.focus();
-			  		if (show_hide.innerText == "Show"){
-		  				password.type = "text";
-		  				show_hide.innerText = "Hide";
-	  				}
-		  			else{
-		  				password.type = "password";
-		  				show_hide.innerText = "Show";
-		  			}
-	  				setTimeout(function() {bring_to_start(password)},0);
 		  			return;
 		  		}
 				if(password.value !== ""){
@@ -321,17 +316,8 @@
 		});
 
 		confirm_password.addEventListener("focusout", (event) => {
-			if (event.relatedTarget !== null && event.relatedTarget.id == "show_hide1") {
+			if (event.relatedTarget !== null && (event.relatedTarget.id == "show_hide1" || event.relatedTarget.id == "show_hide")) {
 		  		confirm_password.focus();
-			  	if (show_hide1.innerText == "Show"){
-		  			confirm_password.type = "text";
-		  			show_hide1.innerText = "Hide";
-	  			}
-		  		else{
-		  			confirm_password.type = "password";
-		  			show_hide1.innerText = "Show";
-		  		}
-	  			setTimeout(function() {bring_to_start(password)},0);
 		  		return;
 		  	}
 		});	
@@ -433,7 +419,7 @@
 			if (name.value == ""){
 				counter.innerText = 40;
 			}
-  			if (name.value == "" && error_name.innerHTML == "") {
+  			if (error_name.innerHTML == "") {
   				hint_name.style.display = "block";
   			} 
 		});
@@ -442,6 +428,30 @@
 			if (error_password.innerHTML == "") {
   				hint_password.style.display = "block";
   			}
+		});
+
+		show_hide.addEventListener("click", (event) => {
+			if (show_hide.innerText == "Show"){
+		  		password.type = "text";
+		  		show_hide.innerText = "Hide";
+	  		}
+		  	else{
+		  		password.type = "password";
+		  		show_hide.innerText = "Show";
+		  	}
+	  		setTimeout(function() {bring_to_start(password)},0);
+		});
+
+		show_hide1.addEventListener("click", (event) => {
+			if (show_hide1.innerText == "Show"){
+		  		confirm_password.type = "text";
+		  		show_hide1.innerText = "Hide";
+	  		}
+			else{
+				confirm_password.type = "password";
+				show_hide1.innerText = "Show";
+			}
+	  		setTimeout(function() {bring_to_start(confirm_password)},0);
 		});
 
 		function showError(element) {
