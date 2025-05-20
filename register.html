@@ -205,6 +205,9 @@
 							event.preventDefault();
 							return;
 						}
+						else{
+							error_email.innerHTML = res;
+						}
 				    }
 				};
 				var url = "check_email_existence?email="+ email.value;
