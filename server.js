@@ -174,7 +174,7 @@ app.get('/check_login_information', async (req, res) => {
 	  	res.send('{"res":"Error establishing a database connection. Please try again."}')
 		 	return
 		} 		  
-		var sql = "select id,name,password from users where email=?"
+		var sql = "select id,service_provider,password from users where email=?"
 		con.query(sql, [email], async function (err, result) {
 		  if (err) {
 			res.send('{"res":"Error validating login information. Please try again."}')
