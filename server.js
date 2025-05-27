@@ -148,7 +148,7 @@ app.post('/add_user', (req, res) => {
 			 	return
 			} 
 		  
-		  var sql = "INSERT INTO users (name, email, password) VALUES (?,?,?)"
+		  var sql = "INSERT INTO users (service_provider, email, password) VALUES (?,?,?)"
 		  con.query(sql, [name,email,hashedpassword], function (err, result) {
 			  if (err) {
 				 	res.send("Error adding user. Please click the verification link again.")
