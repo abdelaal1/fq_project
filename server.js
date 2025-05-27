@@ -277,7 +277,7 @@ app.post('/email2', async (req, res) => {
 		 	return
     } 
     else {
-		 	res.send("Please click the verification link we have sent to your email to complete resetting your password. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour.")
+		 	res.send("<p>Please click the verification link we have sent to your email to complete resetting your password. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour.</p>")
   	}
 	})
 })
