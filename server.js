@@ -185,7 +185,7 @@ app.get('/check_login_information', async (req, res) => {
     		const isMatch = await bcrypt.compare(password, db_password)
     		if (isMatch) {
     			const id = result[0].id
-    			const name = result[0].name
+    			const name = result[0].service_provider
 					const token = jwt.sign({ id: id, name: name }, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
 					res.cookie('auth_jwt', token, {
 	        httpOnly: true,
@@ -359,7 +359,7 @@ app.get('/update_name', (req, res) => {
 					 	res.send("error updating name.")
 					 	return
 				}			  
-			  const sql = "UPDATE users SET name = ? WHERE id = ?"
+			  const sql = "UPDATE users SET service_provider = ? WHERE id = ?"
 			  con.query(sql, [new_name, id], function (err, result) {
 				  if (err) {
 					 	res.send("error updating name.")
