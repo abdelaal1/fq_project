@@ -7,7 +7,7 @@
 </head>
 <body>
 	<form id="form" action="add_user" method="post">
-		<input type="hidden" name="name" id="name">
+		<input type="hidden" name="service_provider" id="service_provider">
 		<input type="hidden" name="email" id="email">
 		<input type="hidden" name="hashedpassword" id="hashedpassword">
 		<input type="hidden" name="token" id="token">
@@ -15,17 +15,17 @@
 
 	<script type="text/javascript">
 		const form = document.getElementById("form");
-		const name_element = document.getElementById("name");
+		const service_provider_element = document.getElementById("service_provider");
 		const email_element = document.getElementById("email");
 		const hashedpassword_element = document.getElementById("hashedpassword");
 		const token_element = document.getElementById("token");
 
-		const name = window.location.hash.split('&')[0].split('=')[1];
+		const service_provider = window.location.hash.split('&')[0].split('=')[1];
 		const email = window.location.hash.split('&')[1].split('=')[1];
 		const hashedpassword = window.location.hash.split('&')[2].split('=')[1];
 		const token = window.location.hash.split('&')[3].split('=')[1];
 
-		name_element.value = name;
+		service_provider_element.value = service_provider;
 		email_element.value = email;
 		hashedpassword_element.value = hashedpassword;
 		token_element.value = token;

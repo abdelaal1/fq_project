@@ -109,13 +109,13 @@ app.get('/check_email_existence', (req, res) => {
 })
 
 app.post('/email1', async (req, res) => {	
-	const name = req.body.name
+	const service_provider = req.body.service_provider
 	const email = req.body.email
 	const password = req.body.password
 	const hashedpassword = await bcrypt.hash(password, 8)
 	const key = 'cfd87hgfc0uewcfd32ojnbt569uhbaplr'
 	const token = jwt.sign({email: email}, key, { expiresIn: '1h' })
-	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/get_to_post1#name='+encodeURIComponent(name)+'&email='+encodeURIComponent(email)+'&hashedpassword='+encodeURIComponent(hashedpassword)+'&token='+encodeURIComponent(token)	
+	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/get_to_post1#service_provider='+encodeURIComponent(service_provider)+'&email='+encodeURIComponent(email)+'&hashedpassword='+encodeURIComponent(hashedpassword)+'&token='+encodeURIComponent(token)	
 	const mailOptions = {
 		from: '"Follow Queue"ghoneim0061@gmail.com',
 		to: email,
@@ -134,7 +134,7 @@ app.post('/email1', async (req, res) => {
 })
 
 app.post('/add_user', (req, res) => {
-	const name = decodeURIComponent(req.body.name)
+	const service_provider = decodeURIComponent(req.body.service_provider)
 	const email = decodeURIComponent(req.body.email)
 	const hashedpassword = decodeURIComponent(req.body.hashedpassword)
 	const token = decodeURIComponent(req.body.token)
@@ -149,7 +149,7 @@ app.post('/add_user', (req, res) => {
 			} 
 		  
 		  var sql = "INSERT INTO users (service_provider, email, password) VALUES (?,?,?)"
-		  con.query(sql, [name,email,hashedpassword], function (err, result) {
+		  con.query(sql, [service_provider,email,hashedpassword], function (err, result) {
 			  if (err) {
 				 	res.send("Error adding user. Please click the verification link again.")
 				 	return
@@ -185,8 +185,8 @@ app.get('/check_login_information', async (req, res) => {
     		const isMatch = await bcrypt.compare(password, db_password)
     		if (isMatch) {
     			const id = result[0].id
-    			const name = result[0].service_provider
-					const token = jwt.sign({ id: id, name: name }, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
+    			const service_provider = result[0].service_provider
+					const token = jwt.sign({ id: id, service_provider: service_provider }, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
 					res.cookie('auth_jwt', token, {
 	        httpOnly: true,
 	        maxAge: 60 * 60 * 1000 * 24 * 100, 
@@ -210,7 +210,7 @@ app.get('/admin_dashboard.html', (req, res) => {
 		const token = req.cookies.auth_jwt
 	  const user = jwt.verify(token, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
 	  const id = user.id
-	  const name = user.name
+	  const service_provider = user.service_provider
 	  const element = db.find((element) => element[0] == ("id" + id))
 		if(element){
 			var last_called_customer = element[1]
@@ -220,13 +220,13 @@ app.get('/admin_dashboard.html', (req, res) => {
 		}	
 	  if(req.query.lang == "ar"){
 		 	res.render('admin_dashboard1.hbs', {					 
-			name: name,
+			service_provider: service_provider,
 			last_called_customer: last_called_customer
 			})
 		}
 		else{
 			res.render('admin_dashboard.hbs', {					 
-			name: name,
+			service_provider: service_provider,
 			last_called_customer: last_called_customer
 			})
 		}	  		
@@ -319,8 +319,8 @@ app.get('/link-qr.html', async (req, res) => {
 		const token = req.cookies.auth_jwt
   	const user = jwt.verify(token, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')    
   	const id = user.id
-  	const name = user.name
-		var link = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/customer-dashboard.html?id=" + id + "&name=" + name
+  	const service_provider = user.service_provider
+		var link = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/customer-dashboard.html?id=" + id + "&service_provider=" + service_provider
 		var qr_code = await QRCode.toDataURL(link)
 		if (req.query.lang == "ar") {
 			link = link + "&lang=ar"
@@ -442,16 +442,16 @@ app.all('/update', (req, res) => {
 
 app.get('/customer-dashboard.html', (req, res) => {
 	const id = req.query.id
-	const name = req.query.name
+	const service_provider = req.query.service_provider
   if (req.query.lang == "ar") {
 	  res.render('customer-dashboard1.hbs', {					 
-			name: name,
+			service_provider: service_provider,
 			id:id
 		})
 	}
 	else{
 		res.render('customer-dashboard.hbs', {					 
-			name: name,
+			service_provider: service_provider,
 			id:id
 		})
 	}		
