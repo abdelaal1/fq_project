@@ -4,7 +4,7 @@
   "description": "fq",
   "main": "node1.js",
   "scripts": {
-    "start": "node server.js"
+    "test": "test"
   },
   "repository": {
     "type": "git",
@@ -16,6 +16,7 @@
   "author": "fq",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "crypto-js": "^4.2.0",
@@ -25,8 +26,8 @@
     "mongodb": "^6.14.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.13.0",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^6.10.0",
-    "pg": "^8.15.6",
     "qrcode": "^1.5.4",
     "yargs": "^17.7.2"
   }

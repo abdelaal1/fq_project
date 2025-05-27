@@ -10,7 +10,7 @@
 			text-align: center;
 			margin-left: auto;
 			margin-right: auto;  
-			width: 98%; 
+			width: 90%; 
 			max-width: 450px; 
 			background-color: #e6ffb3;
 			padding-top: 50px;
@@ -25,6 +25,7 @@
 			text-align: left;
 			margin-top: 20px;
 			margin-bottom: 0px;
+			font-size: 14px;
 			display: none;
 		}
 
@@ -32,7 +33,7 @@
 			width: 90%;
 		 	height: 42px;
 		 	border-radius: 5px;
-		 	border: 1px solid black;
+		 	border: solid #b3b3b3 2px;
 		 	padding-left: 5px;
 		 	font-size: 14px;		 	
 		}
@@ -67,7 +68,7 @@
 </head>
 <body>
 	<div>
-		<form id="form" action="reset2.html" method="get" novalidate>
+		<form id="form" action="email2" method="post" novalidate>
 			<input type="email" name="email" id="email" class="user" placeholder="Enter your email" maxlength="40" required>
 			<p id="error">&#9888; Incorrect email. Please try again.</p>
 			<input type="submit" name="submit" value="Submit" id="submit">
@@ -100,7 +101,7 @@
 						var res_text=  xhttp.responseText;
 						var res_obj = JSON.parse(res_text);
 						var res = res_obj.res;
-						if (res == "Email does not exist") {
+						if (res == "email does not exist") {
 							error.style.display = "block";
   							error.innerHTML = "&#9888; Email is not Registered."
   							event.preventDefault();

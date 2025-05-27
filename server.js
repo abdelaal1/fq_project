@@ -24,6 +24,8 @@ const transporter = nodemailer.createTransport({
 
 const register = fs.readFileSync("register.html")
 const index = fs.readFileSync("index.html")
+const get_to_post1 = fs.readFileSync("get_to_post1.html")
+const get_to_post2 = fs.readFileSync("get_to_post2.html")
 const reset1 = fs.readFileSync("reset1.html")
 const help1 = fs.readFileSync("help1.html")
 const help = fs.readFileSync("help.html")
@@ -32,9 +34,19 @@ var clients = []
 var db = []
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.json())
 app.use(cookieParser())
 app.use(express.static(publicDirectoryPath))
 app.set('view engine', 'hbs')
+
+function noCache(req, res, next) {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+  res.set('Pragma', 'no-cache')
+  res.set('Expires', '0')
+  next()
+}
+
+app.use(['/admin_dashboard.html', 'get_to_post1.html', 'get_to_post2.html'], noCache);
 
 setInterval(function() {
 	clients.forEach(function(client) {
@@ -54,7 +66,8 @@ app.get('', (req, res) => {
 })
 
 app.get('/index.html', (req, res) => {
-	if (typeof (req.cookies.auth_jwt) == 'undefined') { 	
+	if (typeof (req.cookies.auth_jwt) == 'undefined') {
+	res.clearCookie('auth_jwt') 	
 	  res.writeHead(200, {"Content-Type": "text/html"})
 		res.write(index)
 		res.end()
@@ -72,7 +85,7 @@ app.get('/register.html', (req, res) => {
 
 app.get('/check_email_existence', (req, res) => {
 	const email = req.query.email
-	var con = mysql.createConnection(process.env.JAWSDB_URL);
+	const con = mysql.createConnection(process.env.JAWSDB_URL)
 	con.connect(function(err) {
 		if (err){
 	  	res.send('{"res":"Error establishing a database connection. Please <a href=\'register.html\'>try again.</a>"}')
@@ -82,7 +95,6 @@ app.get('/check_email_existence', (req, res) => {
 		  con.query(sql, [email], function (err, result) {
 		    	if (err) {
 				 		res.send('{"res":"Error validating email. Please <a href=\'register.html\'>try again.</a>"}')
-				 		con.end()
 				 		return
     			} 
     			if(result.length >= 1) {
@@ -92,81 +104,80 @@ app.get('/check_email_existence', (req, res) => {
   				if(result.length == 0) {
   					res.send('{"res":"email does not exist"}')
   				}
-  				con.end()
 		  })
 	})
 })
 
 app.post('/email1', async (req, res) => {	
-	const service_provider = req.body.service_provider
+	const name = req.body.name
 	const email = req.body.email
 	const password = req.body.password
 	const hashedpassword = await bcrypt.hash(password, 8)
-	const key = 'Nahla_11'
-	const code = crypto.AES.encrypt(email, key).toString()
-	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/add_user?service_provider='+querystring.escape(service_provider)+'&amp;email='+querystring.escape(email)+'&amp;hashedpassword='+querystring.escape(hashedpassword)+'&amp;code='+querystring.escape(code)	
+	const key = 'cfd87hgfc0uewcfd32ojnbt569uhbaplr'
+	const token = jwt.sign({email: email}, key, { expiresIn: '1h' })
+	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/get_to_post1#name='+encodeURIComponent(name)+'&email='+encodeURIComponent(email)+'&hashedpassword='+encodeURIComponent(hashedpassword)+'&token='+encodeURIComponent(token)	
 	const mailOptions = {
-		from: '"FollowQueue"ghoneim0061@gmail.com',
+		from: '"Follow Queue"ghoneim0061@gmail.com',
 		to: email,
 		subject: 'Complete registeration',
 		html: "Please click<a href="+urlencoded+"> here</a> to complete registeration"
 	}
 	transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.</a>")
+		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.")
 		 	return
     } 
     else {
-		 	res.send("Please click the verification link we have sent to your email to complete your registeration. If it does not show up in a few minutes, check your spam folder.")
+		 	res.send("Please click the verification link we have sent to your email to complete your registeration. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour.")
   	}
 	})
 })
 
-app.get('/add_user', (req, res) => {
-	var service_provider = req.query.service_provider
-	var email = req.query.email
-	var hashedpassword = req.query.hashedpassword
-	var code = req.query.code
-	var key = 'Nahla_11'
-	var decrypted = crypto.AES.decrypt(code, key).toString(crypto.enc.Utf8)
-	if (decrypted == email) {
-		var con = mysql.createConnection(process.env.JAWSDB_URL);
+app.post('/add_user', (req, res) => {
+	const name = decodeURIComponent(req.body.name)
+	const email = decodeURIComponent(req.body.email)
+	const hashedpassword = decodeURIComponent(req.body.hashedpassword)
+	const token = decodeURIComponent(req.body.token)
+	const key = 'cfd87hgfc0uewcfd32ojnbt569uhbaplr'
+	try {
+    const payload = jwt.verify(token, key);
+    var con = mysql.createConnection(process.env.JAWSDB_URL)
 		con.connect(function(err) {
 			if (err){
-			  	res.send("Error establishing a database connection. Please click the verification link again.")
+			  res.send("Error establishing a database connection. Please click the verification link again.")
 			 	return
 			} 
 		  
-		  var sql = "INSERT INTO users (service_provider, email, password) VALUES (?, ?, ?)"
-		  con.query(sql, [service_provider, email, hashedpassword], function (err, result) {
+		  var sql = "INSERT INTO users (name, email, password) VALUES (?,?,?)"
+		  con.query(sql, [name,email,hashedpassword], function (err, result) {
 			  if (err) {
 				 	res.send("Error adding user. Please click the verification link again.")
-				 	con.end()
 				 	return
 	    	} 
 	    	else {
 				 	res.send("<h4><span style='color: green; font-size: 85%'>&#10004; </span>Registration completed successfully.</h4>Click <a href = 'index.html'>here</a> to login.")
 	  		}
-	  		con.end()
 		  })
 		})
-	}
+  } 
+  catch (err) {
+    res.status(400).send('Invalid or expired verification token. Please <a href="register.html">try again</a>');
+  }
 })
 
 app.get('/check_login_information', async (req, res) => {
 	const email = req.query.email
 	const password = req.query.password
-	var con = mysql.createConnection(process.env.JAWSDB_URL);
+	const con = mysql.createConnection(process.env.JAWSDB_URL)
 	con.connect(async function(err) {
 		if (err){
 	  	res.send('{"res":"Error establishing a database connection. Please try again."}')
 		 	return
 		} 		  
-		var sql = "select id,service_provider,password from users where email=?"
+		var sql = "select id,name,password from users where email=?"
 		con.query(sql, [email], async function (err, result) {
 		  if (err) {
 			res.send('{"res":"Error validating login information. Please try again."}')
-			con.end()
 			return
     	} 
     	if(result.length >= 1) {
@@ -174,8 +185,8 @@ app.get('/check_login_information', async (req, res) => {
     		const isMatch = await bcrypt.compare(password, db_password)
     		if (isMatch) {
     			const id = result[0].id
-    			const service_provider = result[0].service_provider
-					const token = jwt.sign({ id: id, service_provider: service_provider }, 'Nahla_11')
+    			const name = result[0].name
+					const token = jwt.sign({ id: id, name: name }, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
 					res.cookie('auth_jwt', token, {
 	        httpOnly: true,
 	        maxAge: 60 * 60 * 1000 * 24 * 100, 
@@ -190,7 +201,6 @@ app.get('/check_login_information', async (req, res) => {
   		else {
   			res.send('{"res":"Incorrect login information. Please try again."}')
   		}
-  		con.end()
 		})
 	})
 })
@@ -198,9 +208,9 @@ app.get('/check_login_information', async (req, res) => {
 app.get('/admin_dashboard.html', (req, res) => {
 	try {
 		const token = req.cookies.auth_jwt
-	  const user = jwt.verify(token, 'Nahla_11')
+	  const user = jwt.verify(token, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
 	  const id = user.id
-	  const service_provider = user.service_provider
+	  const name = user.name
 	  const element = db.find((element) => element[0] == ("id" + id))
 		if(element){
 			var last_called_customer = element[1]
@@ -210,13 +220,13 @@ app.get('/admin_dashboard.html', (req, res) => {
 		}	
 	  if(req.query.lang == "ar"){
 		 	res.render('admin_dashboard1.hbs', {					 
-			service_provider: service_provider,
+			name: name,
 			last_called_customer: last_called_customer
 			})
 		}
 		else{
 			res.render('admin_dashboard.hbs', {					 
-			service_provider: service_provider,
+			name: name,
 			last_called_customer: last_called_customer
 			})
 		}	  		
@@ -234,20 +244,27 @@ app.get('/reset1.html', (req, res) => {
 		res.end()	
 })
 
-app.get('/reset2.html', (req, res) => {
-	const email = req.query.email
-	res.render('reset2.hbs', {					 
-	email: email
-	}) 	
+app.post('/reset2.html', (req, res) => {
+	const email = req.body.email
+	const token = req.body.token
+	const key = 'qczdg32620gjxvsewazvcpoqahfhfjdhg355478hf'
+	try {
+    const payload = jwt.verify(token, key);
+    res.render('reset2.hbs', {					 
+		email: email,
+		token: token
+		}) 
+  } 
+  catch (err) {
+    res.status(400).send('Invalid or expired verification token. Please <a href="reset1.html">try again</a>');
+  }		
 })
 
 app.post('/email2', async (req, res) => {	
 	const email = req.body.email
-	const password = req.body.password
-	const hashedpassword = await bcrypt.hash(password, 8)
-	const key = '11_alhaN'
-	const code = crypto.AES.encrypt(email, key).toString()
-	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/update_password?email='+querystring.escape(email)+'&amp;hashedpassword='+querystring.escape(hashedpassword)+'&amp;code='+querystring.escape(code)	
+	const key = 'qczdg32620gjxvsewazvcpoqahfhfjdhg355478hf'
+	const token = jwt.sign({email: email}, key, { expiresIn: '1h' })
+	const urlencoded = 'https://lit-lowlands-82854-b48a400450f7.herokuapp.com/get_to_post2.html#email='+encodeURIComponent(email)+'&token='+encodeURIComponent(token)	
 	const mailOptions = {
 		from: 'ghoneim0061@gmail.com',
 		to: email,
@@ -256,52 +273,54 @@ app.post('/email2', async (req, res) => {
 	}
 	transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.</a>")
+		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.")
 		 	return
     } 
     else {
-		 	res.send("Please click the verification link we have sent to your email to complete resetting your password.")
+		 	res.send("Please click the verification link we have sent to your email to complete resetting your password. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour.")
   	}
 	})
 })
 
-app.get('/update_password', (req, res) => {
-	var email = req.query.email
-	var hashedpassword = req.query.hashedpassword
-	var code = req.query.code
-	var key = '11_alhaN'
-	var decrypted = crypto.AES.decrypt(code, key).toString(crypto.enc.Utf8)
-	if (decrypted == email) {
-		var con = mysql.createConnection(process.env.JAWSDB_URL);
+app.post('/update_password', async (req, res) => {
+	var email = decodeURIComponent(req.body.email)
+	var password = req.body.password
+	const hashedpassword = await bcrypt.hash(password, 8)
+	var token = decodeURIComponent(req.body.token)
+	var key = 'qczdg32620gjxvsewazvcpoqahfhfjdhg355478hf'
+	try{
+		const payload = jwt.verify(token, key);
+		const con = mysql.createConnection(process.env.JAWSDB_URL)
 		con.connect(function(err) {
 			if (err){
 			  res.send("Error establishing a database connection. Please click the verification link again.")
 			 	return
 			} 
-		  
-		  const sql = "UPDATE users SET password = ? WHERE email = ?"
-		  con.query(sql, [hashedpassword, email], function (err, result) {
+			  
+			const sql = "UPDATE users SET password = ? WHERE email = ?"
+			con.query(sql, [hashedpassword, email], function (err, result) {
 			  if (err) {
 				 	res.send("Error updating password. Please click the verification link again.")
-				 	con.end()
 				 	return
-	    	} 
-	    	else {
+		   	} 
+		   	else {
 				 	res.send("<h4><span style='color: green; font-size: 85%'>&#10004; </span>Your password has successfully been reset</h4>Click <a href = 'index.html'>here</a> to login.")
-	  		}
-	  		con.end()
-		  })
+		  	}
+			 })
 		})
 	}
+	catch (err) {
+    res.status(400).send('Invalid or expired verification token. Please <a href="reset1.html">try again</a>');
+  }
 })
 
 app.get('/link-qr.html', async (req, res) => {
 	try{
 		const token = req.cookies.auth_jwt
-  	const user = jwt.verify(token, 'Nahla_11')    
+  	const user = jwt.verify(token, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')    
   	const id = user.id
-  	const service_provider = user.service_provider
-		var link = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/customer-dashboard.html?id=" + id + "&service_provider=" + service_provider
+  	const name = user.name
+		var link = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/customer-dashboard.html?id=" + id + "&name=" + name
 		var qr_code = await QRCode.toDataURL(link)
 		if (req.query.lang == "ar") {
 			link = link + "&lang=ar"
@@ -331,24 +350,22 @@ app.get('/logout', (req, res) => {
 app.get('/update_name', (req, res) => {
 	try{
 		const token = req.cookies.auth_jwt
-  	const user = jwt.verify(token, 'Nahla_11')    
+  	const user = jwt.verify(token, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')    
   	const id = user.id
 		const new_name = req.query.new_name
-		var con = mysql.createConnection(process.env.JAWSDB_URL);
+		const con = mysql.createConnection(process.env.JAWSDB_URL)
 			con.connect(function(err) {
 				if (err) {
 					 	res.send("error updating name.")
 					 	return
 				}			  
-			  const sql = "UPDATE users SET service_provider = ? WHERE id = ?"
+			  const sql = "UPDATE users SET name = ? WHERE id = ?"
 			  con.query(sql, [new_name, id], function (err, result) {
 				  if (err) {
 					 	res.send("error updating name.")
-					 	con.end()
 					 	return
 					}
 					res.send("done")
-					con.end()
 	    	})
 			})
 		}
@@ -377,9 +394,6 @@ app.all('/update', (req, res) => {
 		 	})
 		}	
 		else{
-			const event = "event: " + id
-			const data = "data: " + "0"
-			res.write(event + "\n" + data + "\n\n")
 			clients.push(res)
 			req.connection.on("end", function() {
 				clients.splice(clients.indexOf(res), 1)
@@ -389,7 +403,7 @@ app.all('/update', (req, res) => {
 	}
 	if(req.method === "POST"){
 		const token = req.cookies.auth_jwt
-  	const user = jwt.verify(token, 'Nahla_11')
+  	const user = jwt.verify(token, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
   	var id = user.id
 		const last_called_customer = req.body.last_called_customer
 		if (last_called_customer === "0") {
@@ -428,16 +442,16 @@ app.all('/update', (req, res) => {
 
 app.get('/customer-dashboard.html', (req, res) => {
 	const id = req.query.id
-	const service_provider = req.query.service_provider
+	const name = req.query.name
   if (req.query.lang == "ar") {
 	  res.render('customer-dashboard1.hbs', {					 
-			service_provider: service_provider,
+			name: name,
 			id:id
 		})
 	}
 	else{
 		res.render('customer-dashboard.hbs', {					 
-			service_provider: service_provider,
+			name: name,
 			id:id
 		})
 	}		
@@ -456,10 +470,22 @@ app.get('/help1.html',(req, res) => {
 	res.end()
 })
 
+app.get('/get_to_post1',(req, res) => {
+	res.writeHead(200, {"Content-Type": "text/html"})
+	res.write(get_to_post1)
+	res.end()
+})
+
+app.get('/get_to_post2.html',(req, res) => {
+	res.writeHead(200, {"Content-Type": "text/html"})
+	res.write(get_to_post2)
+	res.end()
+})
+
 app.get('/download_qr_code', (req, res) => {
 	
 	const token = req.cookies.auth_jwt
-  const user = jwt.verify(token, 'Nahla_11')    
+  const user = jwt.verify(token, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')    
   const id = user.id
 	const link = req.query.link
 	const file_name = "qr_code" + id + ".png"

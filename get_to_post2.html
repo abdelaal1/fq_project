@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Complete Registeration</title>
+</head>
+<body>
+	<form id="form" action="reset2.html" method="post">
+		<input type="hidden" name="email" id="email">
+		<input type="hidden" name="token" id="token">
+	</form>
+	<script type="text/javascript">
+		const form = document.getElementById("form");
+		const email_element = document.getElementById("email");
+		const token_element = document.getElementById("token");
+		
+		const email = window.location.hash.split('&')[0].split('=')[1];
+		const token = window.location.hash.split('&')[1].split('=')[1];
+
+		email_element.value = email;
+		token_element.value = token;
+
+		history.replaceState(null, "", window.location.pathname + window.location.search);
+
+		form.submit();
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Complete Registeration</title>
+</head>
+<body>
+	<form id="form" action="add_user" method="post">
+		<input type="hidden" name="name" id="name">
+		<input type="hidden" name="email" id="email">
+		<input type="hidden" name="hashedpassword" id="hashedpassword">
+		<input type="hidden" name="token" id="token">
+	</form>
+
+	<script type="text/javascript">
+		const form = document.getElementById("form");
+		const name_element = document.getElementById("name");
+		const email_element = document.getElementById("email");
+		const hashedpassword_element = document.getElementById("hashedpassword");
+		const token_element = document.getElementById("token");
+
+		const name = window.location.hash.split('&')[0].split('=')[1];
+		const email = window.location.hash.split('&')[1].split('=')[1];
+		const hashedpassword = window.location.hash.split('&')[2].split('=')[1];
+		const token = window.location.hash.split('&')[3].split('=')[1];
+
+		name_element.value = name;
+		email_element.value = email;
+		hashedpassword_element.value = hashedpassword;
+		token_element.value = token;
+
+		history.replaceState(null, "", window.location.pathname + window.location.search);
+
+		form.submit();
+	</script>
+</body>
+</html>
