@@ -313,7 +313,7 @@ app.post('/update_password', async (req, res) => {
 		})
 	}
 	catch (err) {
-    res.status(400).send('Invalid or expired verification token. Please <a href="reset1.html">try again</a>');
+    res.status(400).send(before + 'Invalid or expired verification token. Please <a href="reset1.html">try again</a>' + after);
   }
 })
 
