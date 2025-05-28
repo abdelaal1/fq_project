@@ -30,6 +30,9 @@ const reset1 = fs.readFileSync("reset1.html")
 const help1 = fs.readFileSync("help1.html")
 const help = fs.readFileSync("help.html")
 
+const before = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Responsive Page</title></head><body><p>'
+const after = '</p></body></html>'
+
 var clients = []
 var db = []
 
@@ -277,7 +280,7 @@ app.post('/email2', async (req, res) => {
 		 	return
     } 
     else {
-		 	res.send("Please click the verification link we have sent to your email to complete resetting your password. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour.")
+		 	res.send(before + "Please click the verification link we have sent to your email to complete resetting your password. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour." + after)
   	}
 	})
 })
