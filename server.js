@@ -30,7 +30,7 @@ const reset1 = fs.readFileSync("reset1.html")
 const help1 = fs.readFileSync("help1.html")
 const help = fs.readFileSync("help.html")
 
-const before = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Responsive Page</title></head><body><p>'
+const before = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title></title></head><body><p>'
 const after = '</p></body></html>'
 
 var clients = []
@@ -127,11 +127,11 @@ app.post('/email1', async (req, res) => {
 	}
 	transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.")
+		 	res.send(before + "There was a problem sending you a verification link. Please <a href='register.html'>try again.</a>" + after)
 		 	return
     } 
     else {
-		 	res.send("Please click the verification link we have sent to your email to complete your registeration. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour.")
+		 	res.send(before + "Please click the verification link we have sent to your email to complete your registeration. If it does not show up in a few minutes, check your spam folder. The verification token expires after one hour." + after)
   	}
 	})
 })
@@ -147,18 +147,18 @@ app.post('/add_user', (req, res) => {
     var con = mysql.createConnection(process.env.JAWSDB_URL)
 		con.connect(function(err) {
 			if (err){
-			  res.send("Error establishing a database connection. Please click the verification link again.")
+			  res.send(before + "Error establishing a database connection. Please click the verification link again." + after)
 			 	return
 			} 
 		  
 		  var sql = "INSERT INTO users (service_provider, email, password) VALUES (?,?,?)"
 		  con.query(sql, [service_provider,email,hashedpassword], function (err, result) {
 			  if (err) {
-				 	res.send("Error adding user. Please click the verification link again.")
+				 	res.send(befor + "Error adding user. Please click the verification link again." + after)
 				 	return
 	    	} 
 	    	else {
-				 	res.send("<h4><span style='color: green; font-size: 85%'>&#10004; </span>Registration completed successfully.</h4>Click <a href = 'index.html'>here</a> to login.")
+				 	res.send(before + "<h4><span style='color: green; font-size: 85%'>&#10004; </span>Registration completed successfully.</h4>Click <a href = 'index.html'>here</a> to login." + after)
 	  		}
 		  })
 		})
@@ -276,7 +276,7 @@ app.post('/email2', async (req, res) => {
 	}
 	transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-		 	res.send("There was a problem sending you a verification link. Please <a href='register.html'>try again.")
+		 	res.send(before + "There was a problem sending you a verification link. Please <a href='register.html'>try again." + after)
 		 	return
     } 
     else {
@@ -296,18 +296,18 @@ app.post('/update_password', async (req, res) => {
 		const con = mysql.createConnection(process.env.JAWSDB_URL)
 		con.connect(function(err) {
 			if (err){
-			  res.send("Error establishing a database connection. Please click the verification link again.")
+			  res.send(before + "Error establishing a database connection. Please click the verification link again." + after)
 			 	return
 			} 
 			  
 			const sql = "UPDATE users SET password = ? WHERE email = ?"
 			con.query(sql, [hashedpassword, email], function (err, result) {
 			  if (err) {
-				 	res.send("Error updating password. Please click the verification link again.")
+				 	res.send(before + "Error updating password. Please click the verification link again." + after)
 				 	return
 		   	} 
 		   	else {
-				 	res.send("<h4><span style='color: green; font-size: 85%'>&#10004; </span>Your password has successfully been reset</h4>Click <a href = 'index.html'>here</a> to login.")
+				 	res.send(before + "<h4><span style='color: green; font-size: 85%'>&#10004; </span>Your password has successfully been reset</h4>Click <a href = 'index.html'>here</a> to login." + after)
 		  	}
 			 })
 		})
@@ -359,13 +359,13 @@ app.get('/update_name', (req, res) => {
 		const con = mysql.createConnection(process.env.JAWSDB_URL)
 			con.connect(function(err) {
 				if (err) {
-					 	res.send("error updating name.")
+					 	res.send(before + "error updating name." + after)
 					 	return
 				}			  
 			  const sql = "UPDATE users SET service_provider = ? WHERE id = ?"
 			  con.query(sql, [new_name, id], function (err, result) {
 				  if (err) {
-					 	res.send("error updating name.")
+					 	res.send(before + "error updating name." + after)
 					 	return
 					}
 					res.send("done")
@@ -373,7 +373,7 @@ app.get('/update_name', (req, res) => {
 			})
 		}
 		catch(err){
-  	res.send("error updating name.")
+  	res.send(before + "error updating name." + after)
   	return
   	}			  				
 })
@@ -496,12 +496,12 @@ app.get('/download_qr_code', (req, res) => {
 		
 	QRCode.toFile(file_name, link, function (err) {
   		if (err) {
-  			res.send("Error creating QR code.")
+  			res.send(before + "Error creating QR code." + after)
   		}
   		else{
   			res.download(filePath, (err) => {
           if (err) {
-            res.send("Error downloading the QR code.")
+            res.send(before + "Error downloading the QR code." + after)
           }
           else{
           	fs.unlinkSync(filePath)
