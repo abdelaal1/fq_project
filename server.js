@@ -97,9 +97,19 @@ app.get('/check_email_existence', (req, res) => {
 		const sql = "select id from users where email=?"
 		  con.query(sql, [email], function (err, result) {
 		    	if (err) {
+		    		con.end(err => {
+					    if (err) {
+					      console.error('Error ending the connection:', err)
+					    }
+					  })
 				 		res.send('{"res":"Error validating email. Please <a href=\'register.html\'>try again.</a>"}')
 				 		return
-    			} 
+    			}
+    			con.end(err => {
+					  if (err) {
+					    console.error('Error ending the connection:', err)
+					  }
+					}) 
     			if(result.length >= 1) {
 				 		res.send('{"res":"Email already exists. Please <a href=\'register.html\'>try again.</a>"}')
 				 		return				 	
@@ -154,10 +164,20 @@ app.post('/add_user', (req, res) => {
 		  var sql = "INSERT INTO users (service_provider, email, password) VALUES (?,?,?)"
 		  con.query(sql, [service_provider,email,hashedpassword], function (err, result) {
 			  if (err) {
+			  	con.end(err => {
+					    if (err) {
+					      console.error('Error ending the connection:', err)
+					    }
+					})
 				 	res.send(befor + "Error adding user. Please click the verification link again." + after)
 				 	return
 	    	} 
 	    	else {
+	    		con.end(err => {
+					    if (err) {
+					      console.error('Error ending the connection:', err)
+					    }
+					})
 				 	res.send(before + "<h4><span style='color: green; font-size: 85%'>&#10004; </span>Registration completed successfully.</h4>Click <a href = 'index.html'>here</a> to login." + after)
 	  		}
 		  })
@@ -180,9 +200,19 @@ app.get('/check_login_information', async (req, res) => {
 		var sql = "select id,service_provider,password from users where email=?"
 		con.query(sql, [email], async function (err, result) {
 		  if (err) {
-			res.send('{"res":"Error validating login information. Please try again."}')
-			return
-    	} 
+		  	con.end(err => {
+					if (err) {
+					  console.error('Error ending the connection:', err)
+					}
+				})
+				res.send('{"res":"Error validating login information. Please try again."}')
+				return
+    	}
+    	con.end(err => {
+				if (err) {
+					console.error('Error ending the connection:', err)
+				}
+			}) 
     	if(result.length >= 1) {
     		const db_password = result[0].password
     		const isMatch = await bcrypt.compare(password, db_password)
@@ -303,10 +333,20 @@ app.post('/update_password', async (req, res) => {
 			const sql = "UPDATE users SET password = ? WHERE email = ?"
 			con.query(sql, [hashedpassword, email], function (err, result) {
 			  if (err) {
+			  	con.end(err => {
+					  if (err) {
+					    console.error('Error ending the connection:', err)
+					   }
+					})
 				 	res.send(before + "Error updating password. Please click the verification link again." + after)
 				 	return
 		   	} 
 		   	else {
+		   		con.end(err => {
+					  if (err) {
+					      console.error('Error ending the connection:', err)
+					  }
+					})
 				 	res.send(before + "<h4><span style='color: green; font-size: 85%'>&#10004; </span>Your password has successfully been reset</h4>Click <a href = 'index.html'>here</a> to login." + after)
 		  	}
 			 })
@@ -359,21 +399,31 @@ app.get('/update_name', (req, res) => {
 		const con = mysql.createConnection(process.env.JAWSDB_URL)
 			con.connect(function(err) {
 				if (err) {
-					 	res.send(before + "error updating name." + after)
+					 	res.send("Error establishing a database connection.")
 					 	return
 				}			  
 			  const sql = "UPDATE users SET service_provider = ? WHERE id = ?"
 			  con.query(sql, [new_name, id], function (err, result) {
 				  if (err) {
-					 	res.send(before + "error updating name." + after)
+					 	con.end(err => {
+					    if (err) {
+					      console.error('Error ending the connection:', err)
+					    }
+					  })
+					  res.send("Error updating name.")  
 					 	return
 					}
+					con.end(err => {
+					    if (err) {
+					      console.error('Error ending the connection:', err)
+					    }
+					})  
 					res.send("done")
 	    	})
 			})
 		}
 		catch(err){
-  	res.send(before + "error updating name." + after)
+  	res.send("Error updating name.")
   	return
   	}			  				
 })

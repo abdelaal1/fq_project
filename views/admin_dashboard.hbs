@@ -628,7 +628,7 @@
 					xhttp.onreadystatechange = function() {
 					    if (this.readyState == 4 && this.status == 200) {
 					    	res_text = xhttp.responseText;
-							if (res_text.includes("er")) {
+							if (res_text.includes("Er")) {
 								service_provider.innerText = "Error updating name. Please try again";
 								service_provider.style.color = "red";
 							}
