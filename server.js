@@ -417,7 +417,13 @@ app.get('/update_name', (req, res) => {
 					    if (err) {
 					      console.error('Error ending the connection:', err)
 					    }
-					})  
+					})
+					const token = jwt.sign({ id: id, new_name: new_name }, 'cfd87hgfc0uewcfd32ojnbt569uhbaplr')
+					res.cookie('auth_jwt', token, {
+	        httpOnly: true,
+	        maxAge: 60 * 60 * 1000 * 24 * 100, 
+	        path:"/"
+	    		})  
 					res.send("done")
 	    	})
 			})
