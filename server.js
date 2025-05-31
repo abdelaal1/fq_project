@@ -368,15 +368,17 @@ app.get('/link-qr.html', async (req, res) => {
 		if (req.query.lang == "ar") {
 			link = link + "&lang=ar"
 			qr_code = await QRCode.toDataURL(link)
-			res.render('link-qr1.hbs', {					 
+			res.render('link-qr1.hbs', {
+			service_provider:service_provider,					 
 			link: link,
-			qr_code : qr_code,
+			qr_code : qr_code
 			})
 		}
 		else{
-			res.render('link-qr.hbs', {					 
+			res.render('link-qr.hbs', {
+			service_provider: service_provider,					 
 			link: link,
-			qr_code : qr_code,
+			qr_code : qr_code
 			})
 		}
 	}
