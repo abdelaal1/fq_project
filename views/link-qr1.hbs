@@ -64,7 +64,7 @@
 	}
 
 	function download_qr_code() {
-		window.location.href = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/download_qr_code?link="+link_str;	    
+		window.location.href = "https://lit-lowlands-82854-b48a400450f7.herokuapp.com/download_qr_code?link="+encodeURIComponent(link_str);	    
 	}
 </script>
 </body>
