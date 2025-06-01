@@ -394,7 +394,12 @@
 				bottom: 40px;
 				left: 45%;
 			}
-		}						
+		}
+
+		#new_name:focus{
+			border: solid 2px orangered;
+			outline: none;
+		}							
 
 	</style>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -435,6 +440,7 @@
 		</div>			
 	</dialog>
 	<dialog id="dialog_edit">
+		<p style="margin-bottom: 6px; margin-top: 6px; color: green; "><i class="fa fa-info-circle"></i> If you edit the name, the customers link changes and you should send the new customers link</p>
 		<label for="new_name">New name</label>
 		<div style="margin-bottom: 14px; margin-top: 2px;"><input type="text" name="new_name" id="new_name" maxlength="40" required style="width: 97%; height:25px; font-size: 14px; text-align: left; padding-left: 5px; border-radius: 2px;"></div>
 		<div>
